@@ -1,15 +1,8 @@
-class ApiResponse<T> {
-  statusCode: number;
-  data: T;
-  message: string;
-  success: boolean;
+import type { RequestHandler } from "express";
 
-  constructor(statusCode: number, data: T, message: string = "success") {
-    this.statusCode = statusCode;
-    this.data = data;
-    this.message = message;
-    this.success = statusCode < 400;
-  }
-}
+const asyncHandler =
+  (requestHandler: RequestHandler): RequestHandler =>
+  (req, res, next) =>
+    Promise.resolve(requestHandler(req, res, next)).catch(next);
 
-export { ApiResponse };
+export { asyncHandler };
