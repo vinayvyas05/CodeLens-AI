@@ -3,6 +3,7 @@ import EditorModule from "react-simple-code-editor";
 import prism from "prismjs";
 import { useState } from "react";
 import { fetchResponse } from "../services/ai.service";
+import { PulseLoader } from "react-spinners";
 
 const Editor = (EditorModule as any).default || EditorModule;
 
@@ -12,16 +13,20 @@ interface LeftPanelProps {
 
 const LeftPanel = ({ setReview }: LeftPanelProps) => {
   const [code, setCode] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleReview = async () => {
-    console.log("handleReview")
+    console.log("handleReview");
     try {
+      setLoading(true);
       const response = await fetchResponse(code);
       setReview(response);
-      console.log(response); 
+      console.log(response);
     } catch (error) {
       console.log(error);
-      console.log(code)
+      console.log(code);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -48,9 +53,18 @@ const LeftPanel = ({ setReview }: LeftPanelProps) => {
       <button
         type="button"
         onClick={handleReview}
-        className="absolute bottom-4 right-4 rounded-xl bg-white px-5 py-3 font-semibold text-black shadow-lg hover:bg-gray-200"
+        className="fixed bottom-10 left-160 rounded-xl bg-white px-5 py-3 font-semibold text-black shadow-lg hover:bg-gray-200"
       >
-        Review
+        {loading ? (
+          <PulseLoader
+            color="black"
+            loading={loading}
+            size={10}
+            aria-label="Loading Spinner"
+          />
+        ) : (
+          "Review"
+        )}
       </button>
     </div>
   );
