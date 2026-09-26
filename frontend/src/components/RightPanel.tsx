@@ -1,7 +1,15 @@
 import React from "react";
+import { useState, useEffect } from "react";
 
-const RightPanel = () => {
-  return <div>RightPanel</div>;
+interface RightPanelProps {
+  review: string; 
+}
+
+const RightPanel = ({review}: RightPanelProps) => {
+  
+  return <div>
+    {review}; 
+  </div>;
 };
 
 export default RightPanel;

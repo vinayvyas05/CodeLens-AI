@@ -2,23 +2,36 @@ import "prismjs/themes/prism-tomorrow.css";
 import EditorModule from "react-simple-code-editor";
 import prism from "prismjs";
 import { useState } from "react";
+import { fetchResponse } from "../services/ai.service";
 
 const Editor = (EditorModule as any).default || EditorModule;
 
-const LeftPanel = () => {
+interface LeftPanelProps {
+  setReview: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const LeftPanel = ({ setReview }: LeftPanelProps) => {
   const [code, setCode] = useState("");
+
+  const handleReview = async () => {
+    console.log("handleReview")
+    try {
+      const response = await fetchResponse(code);
+      setReview(response);
+      console.log(response); 
+    } catch (error) {
+      console.log(error);
+      console.log(code)
+    }
+  };
 
   return (
     <div className="relative h-full w-full">
       <Editor
         value={code}
-        onValueChange={(code) => setCode(code)}
-        highlight={(code) =>
-          prism.highlight(
-            code,
-            prism.languages.javascript,
-            "javascript"
-          )
+        onValueChange={(code: string) => setCode(code)}
+        highlight={(code: string) =>
+          prism.highlight(code, prism.languages.javascript, "javascript")
         }
         padding={16}
         style={{
@@ -27,13 +40,14 @@ const LeftPanel = () => {
           lineHeight: 1.5,
           minHeight: "100%",
           width: "100%",
-          backgroundColor: "#1e1e1e",
+          //   backgroundColor: "#1e1e1e",
           color: "#d4d4d4",
         }}
       />
 
       <button
         type="button"
+        onClick={handleReview}
         className="absolute bottom-4 right-4 rounded-xl bg-white px-5 py-3 font-semibold text-black shadow-lg hover:bg-gray-200"
       >
         Review
