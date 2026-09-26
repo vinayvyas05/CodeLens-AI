@@ -16,15 +16,16 @@ const LeftPanel = ({ setReview }: LeftPanelProps) => {
   const [loading, setLoading] = useState(false);
 
   const handleReview = async () => {
-    console.log("handleReview");
+    if (!code || !code.trim()) {
+      alert("Textfield is empty");
+      return;
+    }
+    setLoading(true);
     try {
-      setLoading(true);
       const response = await fetchResponse(code);
       setReview(response);
-      console.log(response);
     } catch (error) {
       console.log(error);
-      console.log(code);
     } finally {
       setLoading(false);
     }
